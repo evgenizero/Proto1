@@ -19,9 +19,7 @@ package com.example.esyanev.proto1.data;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.example.esyanev.proto1.interactors.LoadPostsUseCase;
-
-import javax.annotation.Nonnull;
+import com.example.esyanev.proto1.errors.Error;
 
 import static com.example.esyanev.proto1.data.Status.ERROR;
 import static com.example.esyanev.proto1.data.Status.LOADING;
@@ -33,22 +31,35 @@ public class Resource<T> {
     @Nullable
     public final T data;
     @Nullable
-    public final String message;
-    private Resource(@NonNull Status status, @Nullable T data, @Nullable String message) {
+    public final Throwable error;
+
+    public Resource(@NonNull Status status, @Nullable T data) {
         this.status = status;
         this.data = data;
-        this.message = message;
+        this.error = null;
     }
 
-    public static <T> Resource<T> success(@NonNull T data, @Nonnull String strategy) {
-        return new Resource<>(SUCCESS, data, strategy);
+    private Resource(@NonNull Status status, @Nullable Throwable error) {
+        this.status = status;
+        this.data = null;
+        this.error = error;
     }
 
-    public static <T> Resource<T> error(String msg, @Nullable T data) {
-        return new Resource<>(ERROR, data, msg);
+    public Resource(@NonNull Status status) {
+        this.status = status;
+        this.data = null;
+        this.error = null;
     }
 
-    public static <T> Resource<T> loading(@Nullable T data) {
-        return new Resource<>(LOADING, data, null);
+    public static <T> Resource<T> success(@NonNull T data) {
+        return new Resource<>(SUCCESS, data);
+    }
+
+    public static <T> Resource<T> error(Throwable throwable) {
+        return new Resource<>(ERROR, throwable);
+    }
+
+    public static Resource loading() {
+        return new Resource(LOADING);
     }
 }

@@ -9,13 +9,15 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.Flowable;
-import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subscribers.DisposableSubscriber;
 
 /**
  * Created by esyanev on 23/01/18.
  */
 
-public class LoadPostsUseCase extends UseCase<LoadPostsUseCase.REQUEST_STRATEGY, Resource<List<PostEntity>>> {
+public class LoadPostsUseCase extends UseCase<LoadPostsUseCase.REQUEST_STRATEGY, List<PostEntity>> {
 
     public enum REQUEST_STRATEGY {
         NETWORK_ONLY,
@@ -32,7 +34,7 @@ public class LoadPostsUseCase extends UseCase<LoadPostsUseCase.REQUEST_STRATEGY,
     }
 
     @Override
-    public Flowable<Resource<List<PostEntity>>> execute(REQUEST_STRATEGY strategy) {
+    public Flowable<Resource<List<PostEntity>>> getData(REQUEST_STRATEGY strategy) {
         switch (strategy) {
             case NETWORK_ONLY:
                 return postsRepository.networkPosts();
@@ -42,8 +44,8 @@ public class LoadPostsUseCase extends UseCase<LoadPostsUseCase.REQUEST_STRATEGY,
                 return postsRepository.networkDB();
             case NETWORK_ENCRYPTED_DB:
                 return postsRepository.networkEncryptedDB();
+            default:
+                return postsRepository.networkPosts();
         }
-
-        return postsRepository.getPosts();
     }
 }

@@ -5,11 +5,17 @@
     <data>
 
         <import type="com.example.esyanev.proto1.data.Status" />
+
         <import type="android.view.View" />
 
         <variable
             name="resource"
             type="com.example.esyanev.proto1.data.Resource" />
+
+        <variable
+            name="viewModel"
+            type="com.example.esyanev.proto1.viewmodel.PostsViewModel" />
+
     </data>
 
     <RelativeLayout
@@ -20,13 +26,24 @@
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:resource="@{resource}" />
+            app:resource="@{viewModel.field}" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:onClick="@{viewModel::onSomeButtonClick}"
+            android:text="Button" />
+
+        <EditText
+            android:layout_width="200dp"
+            android:layout_height="wrap_content" />
 
         <ProgressBar
-            android:layout_centerInParent="true"
             android:layout_width="wrap_content"
-            android:visibility="@{resource.status == Status.LOADING ? View.VISIBLE : View.GONE}"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="@{resource.status == Status.LOADING ? View.VISIBLE : View.GONE}" />
 
     </RelativeLayout>
 

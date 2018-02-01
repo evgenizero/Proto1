@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.esyanev.proto1.R;
+import com.example.esyanev.proto1.data.Resource;
+import com.example.esyanev.proto1.data.Status;
 import com.example.esyanev.proto1.data.local.entity.PostEntity;
 import com.example.esyanev.proto1.databinding.FragmentPostsListBinding;
 import com.example.esyanev.proto1.interactors.LoadPostsUseCase;
@@ -61,14 +63,14 @@ public class PostListFragment extends BaseFragment<PostsViewModel, FragmentPosts
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        viewModel.getSomeEvent()
+                .observe(this, message -> Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show());
+
+        dataBinding.setViewModel(viewModel);
+
         LoadPostsUseCase.REQUEST_STRATEGY strategy = (LoadPostsUseCase.REQUEST_STRATEGY) getArguments().getSerializable("strategy");
-        viewModel.getPostsLiveData(strategy)
-                .observe(this, listResource -> {
-                    if (listResource.message != null) {
-                        Toast.makeText(getActivity(), listResource.message, Toast.LENGTH_SHORT).show();
-                    }
-                    dataBinding.setResource(listResource);
-                });
+        viewModel.loadPosts(strategy);
     }
 
 }
